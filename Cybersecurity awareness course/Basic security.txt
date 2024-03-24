@@ -1,0 +1,3 @@
+Malware: Spyware/keyloggers/ransomware/viruses
+
+Phishing: Action from a person that acts as another party to get your resources or data
