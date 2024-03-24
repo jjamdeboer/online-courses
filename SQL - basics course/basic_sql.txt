@@ -1,0 +1,151 @@
+SQL CASE INSENSITIVE, BUT CONVENTION IS TO USE UPPERCASE FOR KEYWORDS
+CONVENTION IS TO USE A NEW LINE FOR EACH NEW KEYWORD
+STRINGS DENOTED BY '' INSTEAD OF ""
+MATHEMATICAL OPERATIONS EXECUTED ON COLUMNS
+IN PSQL, ALWAYS END YOUR COMMANDS WITH SEMICOLON ';'
+
+(POSTGRE)SQL SUPPORTS THE FOLLOWING DATA TYPES:
+BOOLEAN: boolean/bool keyword; true, false, blank/NULL
+CHARACTER (LEADING TO STRINGS): char keyword; single character, char(n) keyword; fixed length character (spaces added when word is shorter), 
+    varchar(n) keyword; variable length character (no spaces...)
+NUMBER (INTS AND FLOATS): smallint keyword; 2-byte signed integer, int keyword; 4-byte signed integer, 
+    serial keyword; same as int, but autmatically generated since they are in order, float(n) keyword; n-byte floating point number, 
+    with maximum of n = 8, real or float8 keyword; 8-byte floating point number, 
+    numeric(p,s); number with p digits and s numbers after decimal point
+TEMPORAL (DATE TYPE): date keyword; date, time keyword; time, timestamp keyword; stored date and time, 
+    interval keyword; stores differences between timestamps, timestamptz keyword; stored both timestamp and time zone
+SPECIAL TYPES
+ARRAYS
+
+LISTING ALL TABLES/DATABASES:
+\list;
+
+LISTING ALL TABLES IN THE CURRENT DATABASE:
+\dt;
+
+SWITCHING BETWEEN DATABASES:
+\connect other_database_name;
+
+PRIMARY KEY IS ONE COLUMN/GROUP OF COLUMNS USED TO UNIQUELY IDENTIFY A ROW IN A TABLE.
+
+selects columns from a table:
+SELECT column1, column2,... FROM table_name;
+SELECT * FROM table_name (all columns);
+
+select only unique values from columns from a table:
+SELECT DISTINCT column1,... FROM table_name;
+
+select specific values from columns from a table:
+SELECT column1,... FROM table_name WHERE condition;
+EXPECTED LOGICAL OPERATORS, EXCEPT '=' IS USED INSTEAD '==' ('AND', 'OR' INCLUDED)
+
+counting the number of rows that satisfy a condition:
+SELECT COUNT(column1,...) FROM table_name WHERE condition;
+SELECT COUNT(DISTINCT column1,...) FROM table_name WHERE condition;
+
+limit the number of rows after a query:
+SELECT * FROM table_name LIMIT limit_number;
+SHOULD ALWAYS BE LAST COMMAND IN A QUERY
+
+sorting, in ascending or descending fashion, the results of a query:
+SELECT column1,... FROM table_name ORDER BY columnx ASC/DESC;
+
+selecting range in query:
+SELECT column1,... FROM table_name WHERE value_column (NOT) BETWEEN low AND high;
+
+selecting range of values in query:
+SELECT column1,... FROM table_name WHERE value_column (NOT) IN (value1, value2,...);
+
+selecting values that are like a selected value:
+SELECT column1,... FROM table_name WHERE columnx (NOT) LIKE 'value' ;
+USING PATTERN MATCHING: '%' (E.G.: 'JAP%') FOR ANY NUMBER OF CHARACTERS, AND '_' FOR A SINGLE CHARACTER
+FOR CASE INSENSITIVE SEARCH USE 'ILIKE' IN POSTGRES
+
+returning the average, maximum value, minimum value, or total/summed value of a column in a table:
+SELECT AVG/MAX/MIN/SUM(value_column) FROM table_name;
+
+rounding an output:
+ROUND(value,number_of_decimal_places);
+
+grouping an output by the unique values in one column:
+SELECT column1,...,agreggate_function(value_column) FROM table_name GROUP BY columnx;
+
+returning a specific output after grouping the unique values in one column:
+SELECT column1,...,agreggate_function(value_column) FROM table_name GROUP BY columnx HAVING condition;
+DIFFERENCE WHERE AND HAVING IS THAT WHERE APPLIES TO INDIVIDUAL ROWS (BEFORE GROUPING), WHEREAS HAVING APPLIES TO GROUPS
+
+returning a column under a different name/with an alias:
+SELECT column1 ('AS' OR ' ') name FROM table_name;
+
+joining two tables (INNER JOIN, OUTER JOIN AND SELF JOIN), with one having a primary key which functions as a foreign key at the other table:
+SELECT table1.column1,table1.column2,...,table2.column1,... FROM table1 (INNER) JOIN table2 ON table2.foreign_key2 = table1.primary_key1;
+JOIN TABLE1 TO TABLE2, ALL ELEMENTS THAT MATCH BOTH TABLE1 AND TABLE2
+    QUERIES THAT REFER TO THE SAME TABLE CAN OFTEN BE IMPROVED PERFORMANCE-WISE BY SELF JOINS. USE 'AS' TO REFER TO THE SAME TABLE TWICE.
+FOR ELEMENTS THAT ARE EITHER ONLY UNIQUE TO TABLE1 (LEFT JOIN) OR TABLE2 (RIGHT JOIN)
+FOR ELEMENTS THAT ARE IN UNIQUE IN TABLE1 AND NOT IN TABLE2 ADD 'WHERE table2.key IS NULL' AND VICE VERSA 'WHERE table1.key IS NULL'
+FOR ALL ELEMENTS IN BOTH TABLE1 AND TABLE2, USE FULL OUTER JOIN, 
+    ADD 'WHERE table2.key IS NULL OR WHERE table1.key IS NULL' IF ONLY THE ELEMENTS ARE NEEDED THAT ARE NOT IN BOTH TABLE1 AND TABLE2
+
+joining two tables where the columns have compatible data types (e.g.: two warehouses), removes duplicates:
+SELECT column1,...,columnx FROM table1 UNION SELECT column1,...,columnx FROM table2;
+
+making a query within a query:
+SELECT column1,... FROM table_name WHERE condition including (SELECT operator FROM TABLE2);
+
+creating a database:
+CREATE DATABASE database_name;
+
+deleting database:
+DROP DATABASE database_name;
+
+creating a table:
+CREATE TABLE table_name (column1 column1_data_type column1_constraint, column2,..., table constraint) [optional:] INHERITS existing_table;
+CREATE TABLE table_name (LIKE other_table);
+SECOND LINE TAKES OVER THE SCHEMA OF ANOTHER TABLE
+COLUMN CONSTRAINTS:
+    NOT NULL: CANNOT BE NULL
+    UNIQUE: MUST BE UNIQUE THROUGHOUT THE TABLE, NULL NOT CONSIDERED VALUE IN POSTGRESQL, THUS CAN OCCUR MANY TIMES, IN SQL ONLY ONCE
+    PRIMARY KEY: NOT NULL AND UNIQUE. IN CASE MULTIPLE COLUMNS ARE PRIMARY KEY, USE TABLE CONSTRAINT
+    CHECK (condition): PERFORMS CHECK WHEN DATA IS INSERTED OR UPDATED
+    REFERENCES: DEFINES FOREIGN KEYS
+TABLE CONSTRAINTS:
+    UNIQUE(column1,column2,...): LISTED COLUMNS MUST CONTAIN UNIQUE VALUES
+    PRIMARY KEY(column1,column2,...): LISTED COLUMNS ARE PRIMARY KEY
+    CHECK(condition): CHECKS FOR CONDITION WHEN CHANGING OR UPDATING DATA ANYWHERE IN THE TABLE
+    REFERENCES: DEFINES FOREIGN KEYS
+
+deleting tables:
+DROP TABLE [optional: ] IF EXISTS table_name;
+OPTIONAL STATEMENT PREVENTS FROM RAISING ERROR IF THE TABLE DOESN'T EXIST
+
+inserting values in a table, creating new rows:
+INSERT INTO table_name(column1,column2,...) VALUES (value1_column1,value1_column2,...), (value2_column1,value2_column2,...);
+
+insert values in existing rows:
+UPDATE table_name SET column1=value_column1, column2=value_column2,... WHERE condition;
+UPDATE table_name SET column1=column2,... WHERE condition;
+SECOND STATEMENT SET ALL VALUES OF THE FIRST COLUMN TO THE VALUES OF THE SECOND COLUMN. ONLY FOR COMPATIBLE DATA TYPES
+NO CONDITION MEANS THAT ALL ROWS OF THAT COLUMN ARE CHANGED TO INDICATED VALUE
+
+deleting values in a table:
+DELETE FROM table_name WHERE condition;
+WITHOUT CONDITION ALL ROWS WILL BE DELETED
+
+changing a table structure:
+ALTER TABLE table_name action;
+ACTIONS:
+    ADD COLUMN: ADD COLUMN column1 column1_data_type column1_constraint, column2...
+    REMOVE: DROP COLUMN column1,...
+    RENAME COLUMN: RENAME COLUMN column1 TO new_column_name
+    SET DEFAULT VALUE FOR COLUMN:
+    ADD CHECK FOR COLUMNS OR MULTIPLE COLUMNS: ADD CONSTRAINT column1 column1_constraint, ...
+    RENAME TABLE: RENAME TO new_table_name
+
+saving the output of a particular query:
+CREATE VIEW view_name AS query/select_statement;
+
+changing the name of a particular view:
+ALTER VIEW view_name RENAME TO other_view_name;
+
+deleting view:
+DROP VIEW view_name;

@@ -1,0 +1,4 @@
+/* NOTE THAT 'NATURAL JOIN' IS A KEYWORD THAT IMPLICITLY JOINS TWO TABLES ON COMMONG COLUMN NAMES */
+/* THE USING KEYWORD MAKES THIS EXPLICIT: FROM _ INNER JOIN _ USING( column_first_table, column_second_table ) 
+== ON column_first_table = column_second_table */
+/* NOTE THAT WITH USING, IF THE NAMES ARE THE SAME, ONCE CAN ALSO USE: USING( column_name ) */
