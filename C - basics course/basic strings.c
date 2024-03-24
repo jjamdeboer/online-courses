@@ -1,0 +1,91 @@
+/*STRINGS ARE A COLLECTION OF CHARS*/
+/*IMPORTANT DIFFERENCE BETWEEN SINGLE CHARACTERS AND STRINGS: CHARACTERS ARE ENCLOSED IN SINGLE QUOTES: '[CHARACTER]'; STRINGS IN DOUBLE QUOTES "[STRINGS]"*/
+
+/*AT THE END OF A STRING THERE IS A NULL CHARACTER THAT SYMBOLIZES THE END OF THE STRING*/
+/*BECAUSE THERE IS A NULL CHARACTER AT THE END, THE ARRAY SIZE FOR A STRING NEEDS TO BE BIGGER BY ONE VALUE THAN THE NUMBER OF CHARACTERS THAT NEEDS TO BE STORED IN THAT STRING,DUE TO THIS EXTRA CHARACTER*/
+/*THE NULL KEYWORD (USED FOR POINTERS) IS SOMETHING COMPLETELY DIFFERENT THAN THE NULL CHARACTER*/
+/*CHARACTER ARRAYS ARE THE SAME AS STRINGS IN C (FOR EXAMPLE: 'char durk[20]', OF WHICH 'durk[19]' IS THE NULL CHARACTER)*/
+/*IN THE ABSENCE OF ANY ARRAY SIZE BEFOREHAND, C DEFINES THE SIZE FOR THAT ARRAY TO BE THE SIZE ON INITIALIZATION + ONE FOR THE NULL CHARACTER*/
+/*BEST IS TO NOT SPECIFY THE SIZE, IN CASE OF A MISTAKE THE COMPILER WILL NOT COMPLAIN AND THERE MAY NOT BE A NULL CHARACTER AT THE END OF THE STRING, WHICH IS A BUG*/
+/*OTHER WAY TO CIRCUMVENT THIS IS TO MAKE STRING LONGER THAN THE NUMBER OF CHARACTER NEEDED AT FIRST (TO BE SURE, SO THAT THERE IS ALWAYS ROOM FOR THE NULL CHARACTER)*/
+
+/*AFTER DECLARATION IT IS NOT TRIVIAL TO ASSIGN A VALUE TO A CHARACTER ARRAY, SINCE IT'S AN ARRAY; FOR THIS A SPECIAL FUNCTION IS NEEDED: 'strncpy()'*/
+/*THE '%s'-SPECIFIER IS FOR NULL-TERMINATED STRINGS*/
+/*SINCE IT CONCERNS AN ARRAY, ALSO COMPARING IS NOT STRAIGTFORWARD ('==' DOES NOT WORK); THERE IS ANOTHER FUNCTION APPLICABLE: 'strcmp', OR COMPARISON NEEDS TO BE DONE CHARACTER PER CHARACTER*/
+/*THERE ARE TWO WAYS OF CREATING A CONSTANT STRING: '#define [STRING NAME] [STRING VALUE]'; OR: 'const char [STRING NAME][[STRING SIZE]] = [STRING VALUE]'*/
+/*THERE IS ANOTHER WAY OF CREATING CONSTANTS: ENUMS, SINCE THESE ARE NOT CHANGED AFTER DECLARATION*/
+
+/*COMMON STRING-FUNCTIONS THAT ARE IN THE LIBRARY 'string.h': 'strlen([STRING])' FOR GETTING STRING LENGTHS; 'strcpy([STRING NAME], [LITERAL STRING THAT NEEDS TO BE COPIED TO THE NAMED STRING])' FOR COPYING A STRING INTO A CHARACTER ARRAY; 'strcat([STRING ONE],[STRING TWO])' FOR CONCATENATING TWO STRINGS; 'strcmp([STRING ONE], [STRING TWO])', WHERE THE SECOND STRING IS UNALTERED AND THE FIRST STRING IS ALTERED INTO FIRST STRING + SECOND STRING; FOR COMPARING WHETHER TWO STRINGS ARE EQUAL ('==' FOR STRINGS)*/
+/*FOR SEVERAL OF THESE FUNCTIONS THERE IS ANOTHER VERSION THAT PREVENTS BUFFER OVERFLOW, BUT TAKES AN EXTRA ARGUMENT, NAMELY: THE SIZE OF THE STRING THAT IS USED FOR THE OPERATION; 'strncpy', 'strncat', 'strncmp'*/
+/*OTHER STRING FUNCTIONS ARE: 'strchr([STRING], [CHAR])' AND 'strstr([STRING], [SUBSTRING TO BE FOUND])' FOR FINDING A CHARACTER OR A SUBSTRING WITHIN A STRING RESPECTIVELY; 'strtok([STRING],[DELIMITER])', WHERE TOKENIZING IN C IS THE SAME AS 'split()' IN PYTHON, WHERE A DELIMITER CAN BE A CHARACTER OR SUBSTRING; OTHER COMPARING FUNCTIONS, SUCH AS 'islower([STRING])', 'isupper([STRING])', 'isdigit([STRING])', 'isalpha([STRING])'*/
+/*THESE SECOND CLASS OF FUNCTIONS RETURNS A POINTER (THE ADDRESS WHERE THE STRING IS STORED), UNLESS, FOR EXAMPLE, THE SUBSTRING IS NOT FOUND, THEN IT RETURN THE NULL POINTER*/
+/*FOR CONVERTING STRINGS: '(char) toupper([STRING])' OR '(char) tolower([STRING])', TYPE CONVERSION TO CHARACTER IS NECESSARY, SINCE THIS FUNCTION RETURNS INTEGER; FOR CONVERTING STRINGS TO INTEGERS 'atoi([STRING])', STRINGS TO FLOATS 'atof([STRING])'; ALSO INTEGER TO ASCII/STRINGS CAN HAPPEN WITH 'itoa([INTEGER])' OR FLOAT TO STRINGS WITH 'ftoa([FLOAT])'*/
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int stringlength(char durk[]){
+    
+    int interim;
+    
+    for (interim = 0; durk[interim] != '\0'; interim++);
+
+    return interim;
+}
+
+char * concatenate(char durk[], char murk[]){
+    
+    int interim = stringlength(durk) + stringlength(murk) + 1;
+    int counter;
+    char durkudurk[interim];
+
+    for (counter = 0; counter < stringlength(durk); counter++){
+        durkudurk[counter] = durk[counter];
+    }
+    for (counter = stringlength(durk); counter < interim; counter++){
+        durkudurk[counter] = murk[counter - stringlength(durk)];
+    }
+    return durk = durkudurk;
+
+}
+
+_Bool stringsareequal(char durk[], char murk[]){
+    
+    int interim;
+    
+    for (interim = 0; durk[interim] == murk[interim], interim < stringlength(durk), interim < stringlength(murk); interim++);
+
+    return durk[interim] == murk[interim];
+
+}
+
+char * reversestring(char durk[]){
+    
+    int interim = stringlength(durk);
+    char murk[interim];
+
+    for (interim = stringlength(durk); interim > 0; interim--){
+        murk[stringlength(durk) - interim] = durk[interim - 1];
+    }
+    murk[stringlength(durk)] = '\0';
+
+    return durk = murk;
+
+}
+
+
+int main(void){
+
+    char durk[] = "DUUUUUUUUURK!";
+    char murk[] = "MUUURK!";
+
+    printf("LENGTH OF DURK IS: %i\n", stringlength(durk));
+    printf("DURK AND DURK ARE EQUAL: %i, DURK AND MURK ARE EQUAL: %i\n", stringsareequal(durk, durk), stringsareequal(durk,murk));
+    printf("AFTER CONCATENATING, DURK BECOMES: %s\n", concatenate(durk, murk));
+    printf("DURK AND MURK: %s, %s\n", durk, murk);
+    printf("REVERSED STRING: %s\n", reversestring(durk));
+
+    return 0;
+
+}
