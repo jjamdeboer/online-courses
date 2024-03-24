@@ -1,0 +1,3 @@
+# ONE CAN USE 'None' AS A PLACEHOLDER
+
+print(1>2)

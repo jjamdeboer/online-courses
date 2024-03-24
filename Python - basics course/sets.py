@@ -1,0 +1,5 @@
+# NO LISTS ALLOWED IN A SET, RETURNS UNORDERED UNIQUE ELEMENTS
+
+basicset = set([1,"HELLO",7.6,(1,5,"WORLD"),2])
+
+print(basicset)
